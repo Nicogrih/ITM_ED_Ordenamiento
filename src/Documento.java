@@ -149,58 +149,23 @@ public class Documento {
         ordenarRapido(pivote + 1, fin, criterio); // ordenar los mayores a la posicion PIVOTE
     }
 
-
     //Insercion 
-    public static void OrdenarConInsercion(int criterio)
-    {   
-        ordenarInsRecursivo(documentos.size(),1,criterio);
-    }
-
-    private static void ordenarInsRecursivo(int n, int i, int criterio)
-    {
-        if (i >= n) return;
-
-        Documento aux = documentos.get(i);
-
-        compararInsRecursivo(i-1,aux,criterio);
-        ordenarInsRecursivo(n,i+1,criterio);
-    }
-
-    private static void compararInsRecursivo( int j, Documento aux, int criterio )//comparar pos, para insertar el aux
-    {
-        if (j < 0 || !esMayor(documentos.get(j), aux, criterio)) {
-            documentos.set(j+1, aux);
-            return;
+    public static void ordenarInsercion(int criterio) {
+        for (int i = 1; i < documentos.size(); i++) {
+            Documento aux = documentos.get(i);
+            int j = i - 1;
+    
+            while (j >= 0 && esMayor(documentos.get(j), aux, criterio)) {
+                documentos.set(j + 1, documentos.get(j));
+                j--;
+            }
+    
+            documentos.set(j + 1, aux);
         }
-        documentos.set(j+1, documentos.get(j));
-        compararInsRecursivo(j-1,aux,criterio);
     }
 
     //Ordenar por busqueda o seleccion
-    private static int indiceMinimo(int inicial, int criterio)
-    {
-        int indiceMin = inicial;
-        for(int i = inicial+1; i<documentos.size();i++)
-        {
-            if (esMayor(documentos.get(indiceMin), documentos.get(i), criterio)) {
-                indiceMin = i;
-            }
-        }
-        return indiceMin;
-    }
-
-    public static void ordenarSeleccion(int inicio, int criterio)
-    {
-        if (inicio >= documentos.size()-1)  return;
-        
-        int indiceMin = indiceMinimo (inicio,criterio);
-        if (inicio != indiceMin) {
-            intercambiar(inicio, indiceMin);
-        }
-        ordenarSeleccion(inicio + 1, criterio);
-    }
-    // Seleccion no recursivo
-    public static void ordenarSeleccionIterativo(int criterio) {
+    public static void ordenarSeleccion(int criterio) {
         int n = documentos.size();
     
         for (int i = 0; i < n - 1; i++) {
@@ -217,18 +182,42 @@ public class Documento {
             }
         }
     }
-    // insercion no recursivo
-    public static void ordenarInsercionIterativo(int criterio) {
-        for (int i = 1; i < documentos.size(); i++) {
-            Documento aux = documentos.get(i);
-            int j = i - 1;
-    
-            while (j >= 0 && esMayor(documentos.get(j), aux, criterio)) {
-                documentos.set(j + 1, documentos.get(j));
-                j--;
-            }
-    
-            documentos.set(j + 1, aux);
-        }
+    //Ordenar por mezcla
+    public static void ordenarMezcla( int criterio){
+        documentos = Mezcla(documentos,criterio);
     }
+
+    private static List<Documento> Mezcla ( List<Documento> lista, int criterio){
+        if (lista.size() <= 1) {
+            return lista;
+        }
+
+        int medio = lista.size() / 2;
+        List<Documento> izquierda = Mezcla(new ArrayList<>(lista.subList(0, medio)), criterio);
+        List<Documento> derecha = Mezcla(new ArrayList<>(lista.subList(medio, lista.size())), criterio);
+    
+        return merge(izquierda, derecha, criterio);
+    }
+    
+    private static List<Documento> merge(List<Documento> izquierda, List<Documento> derecha, int criterio) {
+        List<Documento> resultado = new ArrayList<>();
+        int i = 0, j = 0;
+    
+        while (i < izquierda.size() && j < derecha.size()) {
+            if (!esMayor(izquierda.get(i), derecha.get(j), criterio)) {
+                resultado.add(izquierda.get(i++));
+            } else {
+                resultado.add(derecha.get(j++));
+            }
+        }
+        while (i < izquierda.size()) {
+            resultado.add(izquierda.get(i++));
+        }
+        while (j < derecha.size()) {
+            resultado.add(derecha.get(j++));
+        }
+        return resultado;
+    }
+    
+    
 }

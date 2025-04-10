@@ -19,6 +19,8 @@ public class FrmOrdenamiento extends JFrame {
     private JButton btnOrdenarBurbuja;
     private JButton btnOrdenarRapido;
     private JButton btnOrdenarInsercion;
+    private JButton btnOrdenarSeleccion;
+    private JButton btnOrdenarMezcla;
     private JToolBar tbOrdenamiento;
     private JComboBox cmbCriterio;
     private JTextField txtTiempo;
@@ -35,7 +37,8 @@ public class FrmOrdenamiento extends JFrame {
         btnOrdenarRapido = new JButton();
         cmbCriterio = new JComboBox();
         txtTiempo = new JTextField();
-
+        btnOrdenarSeleccion = new JButton();
+        btnOrdenarMezcla = new JButton();
         btnBuscar = new JButton();
         txtBuscar = new JTextField();
 
@@ -86,6 +89,24 @@ public class FrmOrdenamiento extends JFrame {
         });
         tbOrdenamiento.add(btnBuscar);
         tbOrdenamiento.add(txtBuscar);
+        //Se agrego el boton de seleccion para verificar su tiempo
+        btnOrdenarSeleccion = new JButton("Ordenar Selección");
+        btnOrdenarSeleccion.setToolTipText("Ordenar por Selección");
+        btnOrdenarSeleccion.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                btnOrdenarSeleccionClick(evt);
+            }
+        });
+        tbOrdenamiento.add(btnOrdenarSeleccion);
+        //Se agrego el boton de mezcla para verificar su tiempo
+        btnOrdenarMezcla = new JButton("Ordenar Mezcla");
+        btnOrdenarMezcla.setToolTipText("Ordenar por Mezcla");
+        btnOrdenarMezcla.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                btnOrdenarMezclaClick(evt);
+            }
+        });
+        tbOrdenamiento.add(btnOrdenarMezcla);
 
         JScrollPane spDocumentos = new JScrollPane(tblDocumentos);
 
@@ -124,7 +145,7 @@ public class FrmOrdenamiento extends JFrame {
     private void btnOrdenarInsercionClick(ActionEvent evt) {
         if (cmbCriterio.getSelectedIndex() >= 0) {
             Util.iniciarCronometro();
-            Documento.ordenarInsercionIterativo(cmbCriterio.getSelectedIndex());
+            Documento.ordenarInsercion(cmbCriterio.getSelectedIndex());
             txtTiempo.setText(Util.getTextoTiempoCronometro());
             Documento.mostrar(tblDocumentos);
         } else {
@@ -133,36 +154,30 @@ public class FrmOrdenamiento extends JFrame {
     }
 
     private void btnOrdenarSeleccionClick(ActionEvent evt) {
-        /*if (cmbCriterio.getSelectedIndex() >= 0) {
+        if (cmbCriterio.getSelectedIndex() >= 0) {
             Util.iniciarCronometro();
-            Documento.ordenarSeleccion(0, cmbCriterio.getSelectedIndex());
-            txtTiempo.setText(Util.getTextoTiempoCronometro());
-            Documento.mostrar(tblDocumentos);
-        } else {
-            JOptionPane.showMessageDialog(null, "Elija el criterio de ordenamiento");
-        }*/
-    }
-
-    private void btnBuscar(ActionEvent evt) {
-       /* if (cmbCriterio.getSelectedIndex() >= 0) {
-            Util.iniciarCronometro();
-            Documento.OrdenarConInsercion(cmbCriterio.getSelectedIndex());
-            txtTiempo.setText(Util.getTextoTiempoCronometro());
-            Documento.mostrar(tblDocumentos);
-        } else {
-            JOptionPane.showMessageDialog(null, "Elija el criterio de ordenamiento");
-        }*/ 
-    }
-    /*selccion iterativo
-    if (cmbCriterio.getSelectedIndex() >= 0) {
-            Util.iniciarCronometro();
-            Documento.ordenarSeleccionIterativo(cmbCriterio.getSelectedIndex());
+            Documento.ordenarSeleccion(cmbCriterio.getSelectedIndex());
             txtTiempo.setText(Util.getTextoTiempoCronometro());
             Documento.mostrar(tblDocumentos);
         } else {
             JOptionPane.showMessageDialog(null, "Elija el criterio de ordenamiento");
         }
-     
-     */
+    }
 
+    private void btnOrdenarMezclaClick(ActionEvent evt){
+        if (cmbCriterio.getSelectedIndex() >= 0) {
+            Util.iniciarCronometro();
+            Documento.ordenarMezcla(cmbCriterio.getSelectedIndex());
+            txtTiempo.setText(Util.getTextoTiempoCronometro());
+            Documento.mostrar(tblDocumentos);
+        } else {
+            JOptionPane.showMessageDialog(null, "Elija el criterio de ordenamiento");
+        }
+
+    }
+
+    private void btnBuscar(ActionEvent evt) {
+       
+    }  
+    
 }
